@@ -1,0 +1,18 @@
+[Unit]
+Description=Kopia Server
+Wants=network.target
+Wants=tailscaled.target
+After=syslog.target
+After=network-online.target
+After=tailscaled.target
+
+[Service]
+Type=simple
+EnvironmentFile=/home/kopia/conf/kopia.env
+ExecStart=/usr/bin/kopia server start --tls-cert-file "${KOPIA_CERT_FILE_PATH}" --tls-key-file "${KOPIA_KEY_FILE_PATH}" --address "${KOPIA_BIND_ADDRESS}":51515
+ExecStop=/usr/bin/kopia server shutdown --address "${KOPIA_BIND_ADDRESS}":51515
+Restart=always
+RestartSec=35
+
+[Install]
+WantedBy=default.target
